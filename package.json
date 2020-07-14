@@ -1,0 +1,24 @@
+{
+  "name": "qnap-forum-crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "crawler": "^1.2.2",
+    "dotenv": "^8.2.0",
+    "log4js": "^6.3.0",
+    "mariadb": "^2.4.0",
+    "tracer": "^1.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://10.64.117.11:10080/timhsu/qnap-forum-crawler.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

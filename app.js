@@ -1,4 +1,7 @@
-require('dotenv').config();
+var path = require('path');
+require('dotenv').config({
+    path: path.resolve(__dirname + "/.env")
+});
 const log = require('./log.js').app(process.env.DEBUG);
 const url = require('url');
 const Crawler = require("crawler");
@@ -76,7 +79,7 @@ var topic_list = new Crawler({
     // 工作線程池的大小
     maxConnections: 10,
     // 兩次請求之間的間隔時間
-    rateLimit: 500,
+    //rateLimit: 500,
 
     callback: function (error, res, done) {
         if (error) {
@@ -121,7 +124,7 @@ var topic_content = new Crawler({
     // 工作線程池的大小
     maxConnections: 10,
     // 兩次請求之間的間隔時間
-    rateLimit: 500,
+    //rateLimit: 500,
     callback: function (error, res, done) {
         if (error) {
             log.error(error);
@@ -150,6 +153,12 @@ var topic_content = new Crawler({
         }
         done();
     }
+});
+
+
+topic_content.on('drain', function () {
+    db.close_db();
+    process.exit(0);
 });
 
 topic_pages.queue([BLOCK_LIST_URL]);

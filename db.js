@@ -1,4 +1,7 @@
-require('dotenv').config()
+var path = require('path');
+require('dotenv').config({
+    path: path.resolve(__dirname + "/.env")
+});
 const log = require('./log.js').db(process.env.DEBUG);
 const mariadb = require('mariadb/callback');
 
@@ -35,5 +38,11 @@ module.exports = {
                 if (err) throw err;
                 log.info(result);
             });
+    },
+    close_db() {
+        conn.end(err => {
+            if (err) throw err;
+            log.info(err);
+        })
     }
 }
