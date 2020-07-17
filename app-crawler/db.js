@@ -12,6 +12,20 @@ const conn = mariadb.createConnection({
         database: process.env.DB
     })
 
+function check_db() {
+    return new Promise((resolve, reject) => {
+        var sql = `SELECT COUNT(1) FROM information_schema.tables WHERE table_schema='ss-forum' AND table_name = "
+        date_rank "`
+        if (topic_number == null) {
+            log.error("No init File");
+            reject(Error("No init File"));
+        } else {
+            
+            resolve(url_list);
+        }
+    });
+}
+
 module.exports = {
     update(table, sourcedata) {
         let value_string = "", get_string = "", placeholder = "";
