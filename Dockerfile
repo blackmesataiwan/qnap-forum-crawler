@@ -1,3 +1,4 @@
+# Build jobber
 FROM golang:1.14.6-alpine3.12
 
 RUN apk update && \
@@ -12,28 +13,33 @@ RUN wget "https://github.com/dshearer/jobber/archive/v1.4.4.tar.gz" -O jobber.ta
     make install DESTDIR=/jobber-dist
 
 
+# Build app
 FROM node:14.5.0-alpine3.12
 
-WORKDIR /root
+# make user
+ENV USERID 1100
+RUN addgroup jobberuser && \
+    adduser -S -u "${USERID}" -G jobberuser jobberuser && \
+    mkdir -p "/var/jobber/${USERID}" && \
+    chown -R jobberuser:jobberuser "/var/jobber/${USERID}"
 
+# install jobber
 ENV TZ=Asia/Taipei
 
-RUN apk add tzdata
+RUN apk update && apk add tzdata
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 COPY --from=0 /jobber-dist/usr/local/libexec/jobbermaster /usr/local/libexec/jobbermaster
 COPY --from=0 /jobber-dist/usr/local/libexec/jobberrunner /usr/local/libexec/jobberrunner
 COPY --from=0 /jobber-dist/usr/local/bin/jobber /usr/local/bin/jobber
 
-COPY app-crawler/app.js .
-COPY app-crawler/db.js .
-COPY app-crawler/log.js .
-COPY app-crawler/package.json .
-COPY app-crawler/init .
-COPY jobber/.jobber .
-COPY jobber/jobber.conf /etc/jobber.conf
+# install app
+RUN mkdir -p "/app" && chown -R jobberuser:jobberuser "/app"
+WORKDIR /app
+COPY --chown=jobberuser:jobberuser . .
+RUN ln -snf /app/jobber/jobber.conf /etc/jobber.conf
 
-RUN npm install
-RUN mkdir /usr/local/var
+USER jobberuser
+RUN cd app-crawler && npm install
 
-CMD ["/usr/local/libexec/jobbermaster"]
+CMD ["/usr/local/libexec/jobberrunner", "-u", "/var/jobber/1100/cmd.sock", "/app/jobber/jobber"]

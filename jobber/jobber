@@ -51,7 +51,7 @@ resultSinks:
 jobs:
   ## This section must contain a YAML sequence of maps like the following:
   DailyRun:
-      cmd: node /root/app.js  # shell command to execute
+      cmd: node /app/app-crawler/app.js  # shell command to execute
       time: '0 0 1'  # SEC MIN HOUR MONTH_DAY MONTH WEEK_DAY.
       onError: Backoff  # what to do when the job has an error: Stop, Backoff, or Continue
       #notifyOnError: [*programSink]  # what to do with result when job has an error
