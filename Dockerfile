@@ -1,5 +1,5 @@
 # Build jobber
-FROM golang:1.14.6-alpine3.12
+FROM golang:1.14.6-alpine
 
 RUN apk update && \
     apk upgrade && \
@@ -14,7 +14,7 @@ RUN wget "https://github.com/dshearer/jobber/archive/v1.4.4.tar.gz" -O jobber.ta
 
 
 # Build app
-FROM node:14.5.0-alpine3.12
+FROM node:14.5.0-alpine
 
 # make user
 ENV USERID 1100
