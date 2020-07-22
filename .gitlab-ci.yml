@@ -1,25 +1,18 @@
-job1:
-  image: docker:19.03.12
+image: docker:19.03.12
 
-  before_script:
-    - docker info
+before_script:
+  - docker info
 
-  build:
-    stage: build
-    script:
-      - docker build -t qnap:forum-crawler .
+x86-build:
+  stage: build
+  script:
+    - docker build -t qnap:forum-crawler .
   tags:
     - x86
 
-job2:
-  image: docker:19.03.12
-
-  before_script:
-    - docker info
-
-  build:
-    stage: build
-    script:
-      - docker build -t qnap:forum-crawler .
+arm64-build:
+  stage: build
+  script:
+    - docker build -t qnap:forum-crawler .
   tags:
     - arm64
