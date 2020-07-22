@@ -38,6 +38,7 @@ RUN mkdir -p "/app" && chown -R jobberuser:jobberuser "/app"
 WORKDIR /app
 COPY --chown=jobberuser:jobberuser . .
 RUN ln -snf /app/jobber/jobber.conf /etc/jobber.conf
+RUN chmod 644 /app/jobber/jobber
 
 USER jobberuser
 RUN cd app-crawler && npm install
