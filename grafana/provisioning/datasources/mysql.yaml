@@ -1,0 +1,17 @@
+# # config file version
+apiVersion: 1
+
+deleteDatasources:
+   - name: FourmMysql
+   
+datasources:
+ - name: FourmMysql
+   type: mysql
+   access: proxy
+   url: ${DB_HOST}
+   password: ${DB_PWD}
+   user: ${DB_USER}
+   database: ${DB}
+   version: 1
+   editable: false
+   isDefault: true

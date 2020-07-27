@@ -3,16 +3,21 @@ image: docker:19.03.12
 before_script:
   - docker info
 
+stages:
+  - build
+
 x86-build:
   stage: build
   script:
-    - docker build -t qnap:forum-crawler .
+    - if [ $CI_COMMIT_REF_NAME == "master" ]; then DOCKER_TAG="latest"; else DOCKER_TAG="dev"; fi
+    - docker build -t qnap-svd/forum-crawler:${DOCKER_TAG} ./app
   tags:
     - x86
 
 arm64-build:
   stage: build
   script:
-    - docker build -t qnap:forum-crawler .
+    - if [ $CI_COMMIT_REF_NAME == "master" ]; then DOCKER_TAG="latest"; else DOCKER_TAG="dev"; fi
+    - docker build -t qnap-svd/forum-crawler:${DOCKER_TAG} ./app
   tags:
     - arm64

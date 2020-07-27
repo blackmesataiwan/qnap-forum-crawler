@@ -17,11 +17,11 @@ RUN wget "https://github.com/dshearer/jobber/archive/v1.4.4.tar.gz" -O jobber.ta
 FROM node:14.5.0-alpine
 
 # make user
-ENV USERID 1100
-RUN addgroup jobberuser && \
-    adduser -S -u "${USERID}" -G jobberuser jobberuser && \
-    mkdir -p "/var/jobber/${USERID}" && \
-    chown -R jobberuser:jobberuser "/var/jobber/${USERID}"
+#ENV USERID 1100
+#RUN addgroup jobberuser && \
+#    adduser -S -u "${USERID}" -G jobberuser jobberuser && \
+#    mkdir -p "/var/jobber/${USERID}" && \
+#    chown -R jobberuser:jobberuser "/var/jobber/${USERID}"
 
 # install jobber
 ENV TZ=Asia/Taipei
@@ -34,13 +34,22 @@ COPY --from=0 /jobber-dist/usr/local/libexec/jobberrunner /usr/local/libexec/job
 COPY --from=0 /jobber-dist/usr/local/bin/jobber /usr/local/bin/jobber
 
 # install app
-RUN mkdir -p "/app" && chown -R jobberuser:jobberuser "/app"
+#RUN mkdir -p "/app" && chown -R jobberuser:jobberuser "/app"
+RUN mkdir -p "/app" && mkdir -p "/var/jobber/0"
 WORKDIR /app
-COPY --chown=jobberuser:jobberuser . .
+#COPY --chown=jobberuser:jobberuser . .
+COPY . .
 RUN ln -snf /app/jobber/jobber.conf /etc/jobber.conf
 RUN chmod 644 /app/jobber/jobber
 
-USER jobberuser
+#USER jobberuser
 RUN cd app-crawler && npm install
 
-CMD ["/usr/local/libexec/jobberrunner", "-u", "/var/jobber/1100/cmd.sock", "/app/jobber/jobber"]
+ENV DEBUG=0
+ENV DB_HOST=
+ENV DB_USER=
+ENV DB_PWD=
+ENV DB=
+
+#CMD ["/usr/local/libexec/jobberrunner", "-u", "/var/jobber/${USERID}/cmd.sock", "/app/jobber/jobber"]
+CMD ["/usr/local/libexec/jobberrunner", "-u", "/var/jobber/0/cmd.sock", "/app/jobber/jobber"]

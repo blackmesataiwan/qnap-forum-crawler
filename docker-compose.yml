@@ -1,0 +1,29 @@
+version: "2"
+
+services:
+    app-crawler:
+        build: ./app
+        image: qnap-svd/forum-crawler
+        environment:
+            - DB_HOST=${DB_HOST}
+            - DB_USER=${DB_USER}
+            - DB_PWD=${DB_PWD}
+            - DB=${DB}
+        volumes:
+            - ./app/log:/app/log
+    grafana:
+        image: grafana/grafana
+        environment:
+            - DB_HOST=${DB_HOST}
+            - DB_USER=${DB_USER}
+            - DB_PWD=${DB_PWD}
+            - DB=${DB}
+        volumes:
+            - "./grafana/provisioning:/etc/grafana/provisioning"
+            - "grafana-storage:/var/lib/grafana"
+        ports:
+            - 3000:3000
+        user: "root"
+
+volumes:
+  grafana-storage: {}
